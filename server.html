@@ -10,8 +10,8 @@
     <p id="message">Waiting for message...</p>
     <script>
         //const socket = new WebSocket('ws://${window.location.host}');
-		var host="ws://"+window.location.host;
-		const socket = new WebSocket(host); //'ws://localhost:8000'
+		var host="wss://"+window.location.host;
+		const socket = new WebSocket(host); 
 		socket.onmessage = function(event) {
             console.log('Received message: ', event.data);
 
