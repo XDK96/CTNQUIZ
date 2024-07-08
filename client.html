@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATAN QUIZ Client</title>
+</head>
+<body>
+    <h1>Hello, Client!</h1>
+	<div><input type="number" id="id1"></div>
+    <script>
+        const socket = new WebSocket('ws://localhost:8000');
+		
+		class data{
+		
+		}
+		
+		function communicate()
+		{
+			
+			const inputElement = document.getElementById('id1');
+			console.log(inputElement.value);
+			if(socket.readyState === socket.OPEN) {
+				
+				socket.send(JSON.stringify(inputElement.value));
+			}
+
+		};
+		
+		var x=setInterval(communicate, 10000);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATAN Quiz Server</title>
+</head>
+<body>
+    <h1>Hello, WebSocket!</h1>
+    <p id="message">Waiting for message...</p>
+    <script>
+        const ws = new WebSocket('ws://localhost:8000');
+			
+		ws.onmessage = function(event) {
+            console.log('Received message: ', event.data);
+
+            // Parse the received JSON data
+            const data = JSON.parse(event.data);
+            console.log('Parsed data: ', data);
+
+            // Display the received data
+            const messageElement = document.getElementById('message');
+            messageElement.innerHTML = data;
+        };
+
+		
+		//var x=setInterval(communicate, 10000);
+    </script>
+</body>
+</html>
