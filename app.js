@@ -8,6 +8,6 @@ const server = http.createServer((req, res) => {
   res.end('Hello World! NodeJS \n');
 });
 
-server.listen(port, hostname, () => {
+server.listen(process.env.PORT ||port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
