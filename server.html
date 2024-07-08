@@ -9,9 +9,10 @@
     <h1>Hello, WebSocket!</h1>
     <p id="message">Waiting for message...</p>
     <script>
-        const ws = new WebSocket('ws://localhost:8000');
-			
-		ws.onmessage = function(event) {
+        //const socket = new WebSocket('ws://${window.location.host}');
+		var host="ws://"+window.location.host;
+		const socket = new WebSocket(host); //'ws://localhost:8000'
+		socket.onmessage = function(event) {
             console.log('Received message: ', event.data);
 
             // Parse the received JSON data
