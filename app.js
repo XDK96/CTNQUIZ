@@ -1,13 +1,11 @@
-const http = require('http')
-const hostname = '127.0.0.1';
-const port = 3000;
+var express = require('express');
+var app = express();
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World! NodeJS \n');
+app.get('/', function (req, res) {
+  res.send('Hello World!');
 });
 
-server.listen(process.env.PORT ||port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+// use port 3000 unless there exists a preconfigured port
+var port = process.env.PORT || 3000;
+
+app.listen(port);
