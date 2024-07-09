@@ -4,8 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CATAN QUIZ Client</title>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	  <style>
+		.cool-div {
+		  background-color: #f8f9fa;
+		  padding: 20px;
+		  border-radius: 10px;
+		  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+		.align-center {
+      text-align: center;
+      vertical-align: middle;
+    }
+	  </style>
 </head>
 <body>
+	<div class="container">
     <div align="center">
 	<label  for="regions">Regió:</label>
     <select id="regions" name="regions">
@@ -18,6 +32,7 @@
 	<form id="inputs" name="form-container">
 	
 	</form> 
+	</div>
     <script>
 	
 		const regions=["Galilea","Júdea","Szamaria"];
@@ -50,7 +65,6 @@
 		function createForm(index, tbl) {	
  
 	  const tr = tbl.insertRow();
-     
 	  const td1 = tr.insertCell();
       // Create select element
       var select = document.createElement('select');
@@ -63,16 +77,17 @@
         opt.textContent = option;
         select.appendChild(opt);
       });
-      
       td1.appendChild(select);
-	  
+	  td1.style.maxWidth = '200px';
 	  const td3 = tr.insertCell();
       // Create pointInput
       var pointInput = document.createElement('input');
 	  pointInput.type = 'number';
 	  pointInput.id = "pointInput" + index; 
 	  pointInput.value="2";
+	  pointInput.style.maxWidth='100px';
       td3.appendChild(pointInput);
+	  td3.style.maxWidth = '100px';
 	  
 	  const td4 = tr.insertCell();
 	  // Create cityInput
@@ -80,8 +95,9 @@
 	  cityInput.type = 'number';
 	  cityInput.id = "cityInput" + index;
 	  cityInput.value="0";
+	  cityInput.style.maxWidth='100px';
       td4.appendChild(cityInput);
-	  
+	  td4.style.maxWidth = '100px';
 	  const td5 = tr.insertCell();
 	  var checkboxOptions = [
         { id: 'way'+index, label: 'Út' },
@@ -92,7 +108,9 @@
         var checkboxInput = document.createElement('input');
         checkboxInput.type = 'checkbox';
         checkboxInput.id = option.id;
-		
+		checkboxInput.style.maxWidth='100px';
+		td5.style.maxWidth = '100px';
+		td5.classList.add('align-center');
 		td5.appendChild(checkboxInput);
         
 		});
@@ -107,12 +125,17 @@
 				const tr=tbl.insertRow();
 				const td1=tr.insertCell();
 				td1.textContent="Név";
+				td1.style.maxWidth = '200px';
 				const td2=tr.insertCell();
 				td2.textContent="Pontok";
+				td2.style.maxWidth = '100px';
 				const td3=tr.insertCell();
 				td3.textContent="Városok";
+				td3.style.maxWidth = '100px';
 				const td4=tr.insertCell();
 				td4.textContent="Címek";
+				td4.style.maxWidth = '100px';
+
 			  var formWrapper = document.getElementById('inputs');
 			  for (var i = 0; i < numberOfForms; i++) {
 				var form = createForm(i,tbl);
