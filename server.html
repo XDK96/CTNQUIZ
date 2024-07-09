@@ -31,7 +31,6 @@
 	
 </head>
 <body style="background-color:#4B5320;">
-	<div>
 	<table width="100%" >
 	<tr>
 	<td id="quizbox" width="60%" style="background-color: white; color: #daa520;"><!--rgb(204, 172, 0)-->
@@ -39,10 +38,10 @@
 	<table>
 	<tr width="100%" align="center">
 	<td width="40%">
-	<p id="date" style="font-size: 20px;">Idő</p>
+	<p id="date" style="font-size: 30px;">Idő</p>
 	</td>
 	<td width="10%">
-	<input id="round" type="number" value="0" style="border: none; max-width: 30px; font-size: 20px; color: #daa520;">
+	<input id="round" type="number" value="0" style="border: none; max-width: 50px; font-size: 20px; color: #daa520;">
 	</td>
 	<td width="40%">
 	<p id="timer" align="center" style="font-size: 40px;">Időzítő</p>
@@ -57,23 +56,23 @@
 	<div style="">
 	<table width="100%">
 	<tr>
-	<td colspan="2" align="center" id="question" width="100%"  style="font-size: 35px;">
+	<td colspan="2" align="center" id="question" width="100%"  style="font-size: 40px;">
 	Kérdés
 	</td>
 	</tr>
 	<tr>
-	<td  class="bordered-cell" id="ans1" width="50%" align="center" style="font-size: 35px; min-height: 300px;">
+	<td  class="bordered-cell" id="ans1" width="50%" align="center" style="font-size: 40px; min-height: 300px;">
 	Válasz A
 	</td>
-	<td  class="bordered-cell" id="ans2" width="50%" align="center" style="font-size: 35px; min-height: 300px;">
+	<td  class="bordered-cell" id="ans2" width="50%" align="center" style="font-size: 40px; min-height: 300px;">
 	Válasz B
 	</td>
 	</tr>
 	<tr>
-	<td class="bordered-cell" id="ans3" width="50%" align="center" style="font-size: 35px; min-height: 300px;">
+	<td class="bordered-cell" id="ans3" width="50%" align="center" style="font-size: 40px; min-height: 300px;">
 	Válasz C
 	</td>
-	<td class="bordered-cell" id="ans4" width="50%" align="center" style="font-size: 35px; min-height: 300px;">
+	<td class="bordered-cell" id="ans4" width="50%" align="center" style="font-size: 40px; min-height: 300px;">
 	Válasz D
 	</td>
 	</tr>
@@ -94,10 +93,10 @@
 	</div>
 	</td>
 	<td id="pointbox" width="40%" style="background-color: #0da734;">
-	<table id="results" width="100%" style="color:#614a03; font-size:15px;">
+	<table id="results" width="100%" style="color:#614a03; font-size:20px;">
 	</table>
-	<div align="center" id="sumhit" style="color:#614a03; font-size:30px;">Hit: 0</div>
-	</div>
+	<div align="center" id="sumhit" style="color:#614a03; font-size:40px;">Hit: 0</div>
+	</table>
     <script>
 			let countdownTime = 33; // Kezdő idő másodpercben (pl. 10 perc)
 			let countdownInterval;
