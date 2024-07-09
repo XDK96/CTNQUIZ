@@ -15,92 +15,91 @@
     }
 
     .child {
-        width: 50%; 
-        height: 100px;
-        background-color: green;
-        color: white;
-        text-align: center;
-        line-height: 100px;
-        position: relative;
+        text-color: inherit;
     }
 	.dice {
-            font-size: 5em;
-            margin: 20px;
+        padding -10px;    
+
         }
+		
+	.bordered-cell {
+      border: 2px solid #4E342E; /* Dark Brown */
+      padding: 10px;
+      text-align: center;
+    }
 </style>
 	
 </head>
-<body>
+<body style="background-color:#4B5320;">
 	<div>
-	<table width="100%">
+	<table width="100%" >
 	<tr>
-	<td id="quizbox" width="60%" style="background-color: red;">
+	<td id="quizbox" width="60%" style="background-color: white; color: #daa520;"><!--rgb(204, 172, 0)-->
 	<div>
 	<table>
-	<tr>
-	<td width="30%">
-	<p id="date">Idő</p>
+	<tr width="100%" align="center">
+	<td width="40%">
+	<p id="date" style="font-size: 20px;">Idő</p>
 	</td>
-	<td width="20%">
-	<input id="round" type="number" value="0">
+	<td width="10%">
+	<input id="round" type="number" value="0" style="border: none; max-width: 30px; font-size: 20px; color: #daa520;">
 	</td>
-	<td width="25%">
-	<p id="timer" align="center">Időzítő</p>
+	<td width="40%">
+	<p id="timer" align="center" style="font-size: 40px;">Időzítő</p>
 	</td>
-	<td width="25%" align="center">
+	<td width="20%" align="center">
 	<!--<button id="qsstep"></button> -->
-	<button id="step" onclick="stepRound()">Lépés</button> 
+	<button id="step" onclick="stepRound()" style="border: none; background-color:white; font-size: 20px; color: #daa520;">Lépés</button> 
 	</td>
 	</tr>
 	</table>
 	</div>
-	<div style="background-color: lightblue;">
+	<div style="">
 	<table width="100%">
 	<tr>
-	<td colspan="2" align="center" id="question" width="100%"  style="background-color: red;">
+	<td colspan="2" align="center" id="question" width="100%"  style="font-size: 35px;">
 	Kérdés
 	</td>
 	</tr>
 	<tr>
-	<td  id="ans1" width="50%" align="center">
+	<td  class="bordered-cell" id="ans1" width="50%" align="center" style="font-size: 35px; min-height: 300px;">
 	Válasz A
 	</td>
-	<td id="ans2" width="50%" align="center">
+	<td  class="bordered-cell" id="ans2" width="50%" align="center" style="font-size: 35px; min-height: 300px;">
 	Válasz B
 	</td>
 	</tr>
 	<tr>
-	<td id="ans3" width="50%" align="center">
+	<td class="bordered-cell" id="ans3" width="50%" align="center" style="font-size: 35px; min-height: 300px;">
 	Válasz C
 	</td>
-	<td id="ans4" width="50%" align="center">
+	<td class="bordered-cell" id="ans4" width="50%" align="center" style="font-size: 35px; min-height: 300px;">
 	Válasz D
 	</td>
 	</tr>
 	<tr>
 	<td  align="center">
-	<div class="dice" id="dice1">🎲</div>
+	<div class="dice" id="dice1" style="font-size: 150px;">🎲</div>
 	</td>
 	<td  align="center">
-	<div class="dice" id="dice2">🎲</div>
+	<div class="dice" id="dice2" style="font-size: 150px;">🎲</div>
 	</td>
 	</tr>
 	<tr>
 	<td colspan="2">
-	<div align="center" id="seven"></div>
+	<div align="center" id="seven" style="font-size: 35px;"></div>
 	<td>
 	</tr>
 	</table>
 	</div>
 	</td>
-	<td id="pointbox" width="40%" style="background-color: green;">
-	<table id="results" width="100%">
-	
+	<td id="pointbox" width="40%" style="background-color: #0da734;">
+	<table id="results" width="100%" style="color:#614a03; font-size:15px;">
 	</table>
-	<div align="center" id="sumhit">Hit: 0</div>
+	<div align="center" id="sumhit" style="color:#614a03; font-size:30px;">Hit: 0</div>
 	</div>
     <script>
-			let countdownTime = 45; // Kezdő idő másodpercben (pl. 10 perc)
+			let countdownTime = 33; // Kezdő idő másodpercben (pl. 10 perc)
 			let countdownInterval;
 			let currentCountdownTime = countdownTime; // A jelenlegi visszaszámláló idő
 
@@ -241,6 +240,7 @@
 				td.setAttribute("id", "region"+i);
 				td.setAttribute("align", "center");
 				td.setAttribute("colspan", "5");
+				td.style.fontSize="20px";
 				td.textContent=regions[i];
 				for (var j=0; j<4; j++)
 				{
@@ -249,11 +249,15 @@
 					td1.setAttribute("id", "name"+i*4+j);
 					const td2 = rv.insertCell();
 					td2.setAttribute("id", "point"+i*4+j);
+					td2.style.textAlign = 'center';
 					const td3 = rv.insertCell();
 					td3.setAttribute("id", "city"+i*4+j);
+					td3.style.textAlign = 'center';
 					const td4 = rv.insertCell();
 					td4.setAttribute("id", "way"+i*4+j);	
+					td4.style.textAlign = 'center';
 					const td5 = rv.insertCell();
+					td5.style.textAlign = 'center';
 					td5.setAttribute("id", "army"+i*4+j);
 					const tickSpan0 = document.createElement('span');
 					tickSpan0.className = 'tick'; 
@@ -273,12 +277,16 @@
 				td1.setAttribute("id", "sname"+i);
 				const td2 = rv1.insertCell();
 				td2.setAttribute("id", "spoint"+i);
+				td2.style.textAlign = 'center';
 				const td3 = rv1.insertCell();
 				td3.setAttribute("id", "scity"+i);
+				td3.style.textAlign = 'center';
 				const td4 = rv1.insertCell();
 				td4.setAttribute("id", "sway"+i);
+				td4.style.textAlign = 'center';
 				const td5 = rv1.insertCell();
 				td5.setAttribute("id", "sarmy"+i);
+				td5.style.textAlign = 'center';
 				const tickSpan0 = document.createElement('span');
 				tickSpan0.className = 'tick'; 
 				tickSpan0.innerHTML = '&#10003;';
