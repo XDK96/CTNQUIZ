@@ -105,7 +105,7 @@
 			function startCountdown() {
 			if (!countdownInterval) {
             countdownInterval = setInterval(() => {
-                const seconds = currentCountdownTime % 61;
+                const seconds = currentCountdownTime % 60;
 
                 // Formázás: két számjegyű perc és másodperc
                 document.getElementById('timer').textContent = `${seconds}`;
@@ -132,7 +132,7 @@
 			function resetCountdown() {
 				stopCountdown();
 				currentCountdownTime = countdownTime;
-				const seconds = currentCountdownTime % 61;
+				const seconds = currentCountdownTime % 60;
 				document.getElementById('timer').textContent = `${seconds}`;
 			}
 		//startCountdown();
@@ -142,19 +142,40 @@
 		function stepRound()
 		{
 			roundCount=parseInt(document.getElementById('round').value,10)+1;
-			CalculateHit(roundCount-1);
-			if (roundCount==51)
+			if (roundCount!=1 && roundCount<=51)
+				CalculateHit(roundCount-1);
+			if (roundCount<51)
 			{
+			resetCountdown();
+			startCountdown();
 			}
 			document.getElementById('round').value=roundCount;
-			getQuiz(roundCount);
+			if (roundCount<51)
+				getQuiz(roundCount);
 			var dcs=rollDice(1)+1;
 			dcs+=rollDice(2)+1;
 			document.getElementById('seven').textContent="";
+			if (roundCount<51)
+			{
 			resetCountdown();
 			startCountdown();
+			}
+			else
+			{
+				resetCountdown();
+				document.getElementById('timer').textContent = '';
+				document.getElementById('seven').textContent="";
+				document.getElementById('dice1').textContent="";
+				document.getElementById('dice2').textContent="";
+				document.getElementById('question').textContent="";
+				for (var i=1; i<=4; i++)
+				{
+					document.getElementById("ans"+i).style.border="none";
+					document.getElementById("ans"+i).textContent="";
+				}
+			}
 			setDate();
-			if (dcs==7)
+			if (dcs==7 && roundCount<51)
 			{
 				blessing+=1;
 				if (blessing%2==1)
@@ -168,7 +189,7 @@
 			}
 			if (roundCount==51)
 			{
-				document.getElementById('seven').textContent="Jeruzsálem ostroma 1187 szeptember."
+				document.getElementById('seven').textContent="Jeruzsálem ostroma kezdetét vette 1187 szeptember 20-án."
 			}
 		}
 		function setDate()
@@ -195,6 +216,7 @@
 		}
 		
 		var ansNumber=-1;
+		
 		function getQuiz(round)
 		{
 			document.getElementById('question').textContent=quiz[(roundCount-1)*6];
