@@ -79,15 +79,16 @@
       });
       td1.appendChild(select);
 	  td1.style.maxWidth = '200px';
+	  td1.style.minHeight = '75px';
 	  const td3 = tr.insertCell();
       // Create pointInput
       var pointInput = document.createElement('input');
 	  pointInput.type = 'number';
 	  pointInput.id = "pointInput" + index; 
 	  pointInput.value="2";
-	  pointInput.style.maxWidth='100px';
+	  pointInput.style.maxWidth='50px';
       td3.appendChild(pointInput);
-	  td3.style.maxWidth = '100px';
+	  td3.style.maxWidth = '50px';
 	  
 	  const td4 = tr.insertCell();
 	  // Create cityInput
@@ -95,9 +96,9 @@
 	  cityInput.type = 'number';
 	  cityInput.id = "cityInput" + index;
 	  cityInput.value="0";
-	  cityInput.style.maxWidth='100px';
+	  cityInput.style.maxWidth='50px';
       td4.appendChild(cityInput);
-	  td4.style.maxWidth = '100px';
+	  td4.style.maxWidth = '50px';
 	  const td5 = tr.insertCell();
 	  var checkboxOptions = [
         { id: 'way'+index, label: 'Út' },
@@ -108,8 +109,8 @@
         var checkboxInput = document.createElement('input');
         checkboxInput.type = 'checkbox';
         checkboxInput.id = option.id;
-		checkboxInput.style.maxWidth='100px';
-		td5.style.maxWidth = '100px';
+		checkboxInput.style.maxWidth='50px';
+		td5.style.maxWidth = '50px';
 		td5.classList.add('align-center');
 		td5.appendChild(checkboxInput);
         
@@ -128,13 +129,13 @@
 				td1.style.maxWidth = '200px';
 				const td2=tr.insertCell();
 				td2.textContent="Pontok";
-				td2.style.maxWidth = '100px';
+				td2.style.maxWidth = '50px';
 				const td3=tr.insertCell();
 				td3.textContent="Városok";
-				td3.style.maxWidth = '100px';
+				td3.style.maxWidth = '50px';
 				const td4=tr.insertCell();
 				td4.textContent="Címek";
-				td4.style.maxWidth = '100px';
+				td4.style.maxWidth = '50px';
 
 			  var formWrapper = document.getElementById('inputs');
 			  for (var i = 0; i < numberOfForms; i++) {
