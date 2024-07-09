@@ -6,29 +6,174 @@
     <title>CATAN QUIZ Client</title>
 </head>
 <body>
-    <h1>Hello, Client!</h1>
-	<div><input type="number" id="id1"></div>
+    <div align="center">
+	<label  for="regions">Regió:</label>
+    <select id="regions" name="regions">
+        <option value="0">Galilea</option>
+        <option value="1">Júdea</option>
+        <option value="2">Szamaria</option>
+       
+    </select>
+	</div>
+	<form id="inputs" name="form-container">
+	
+	</form> 
     <script>
+	
+		const regions=["Galilea","Júdea","Szamaria"];
+	
         var host="wss://"+window.location.host;
+		if (host.search("localhost") !== -1)
+			host="ws://"+window.location.host;
+		var http="https://"+window.location.host;
+		if (http.search("localhost") !== -1)
+			http="http://"+window.location.host;
 		const socket = new WebSocket(host); 
+		var names;
+		
+		async function fetchFileContent(type) {
+		try {
+			const response = await fetch(http+"/"+type);
+			if (!response.ok) {
+			  throw new Error('Network response was not ok ' + response.statusText);
+			}
+			const text = await response.text();
+			names = text.split('\n'); // Split the text into lines
+		  } catch (error) {
+			console.error('There was a problem with the fetch operation:', error);
+		  }
+		}
+		
+		//fetchFileContent("quiz");
+		
+		
+		function createForm(index, tbl) {	
+ 
+	  const tr = tbl.insertRow();
+     
+	  const td1 = tr.insertCell();
+      // Create select element
+      var select = document.createElement('select');
+      select.id = 'name' + index;
+      select.name = 'name' + index;
+      var options = names;
+      options.forEach(function(option, idx) {
+        var opt = document.createElement('option');
+        opt.value = 'name' + (idx + 1);
+        opt.textContent = option;
+        select.appendChild(opt);
+      });
+      
+      td1.appendChild(select);
+	  
+	  const td3 = tr.insertCell();
+      // Create pointInput
+      var pointInput = document.createElement('input');
+	  pointInput.type = 'number';
+	  pointInput.id = "pointInput" + index; 
+	  pointInput.value="2";
+      td3.appendChild(pointInput);
+	  
+	  const td4 = tr.insertCell();
+	  // Create cityInput
+      var cityInput = document.createElement('input');
+	  cityInput.type = 'number';
+	  cityInput.id = "cityInput" + index;
+	  cityInput.value="0";
+      td4.appendChild(cityInput);
+	  
+	  const td5 = tr.insertCell();
+	  var checkboxOptions = [
+        { id: 'way'+index, label: 'Út' },
+        { id: 'army'+index, label: 'Hadsereg' },
+    ];
+
+    checkboxOptions.forEach(function(option) {
+        var checkboxInput = document.createElement('input');
+        checkboxInput.type = 'checkbox';
+        checkboxInput.id = option.id;
+		
+		td5.appendChild(checkboxInput);
+        
+		});
+      
+	  
+    }
+		
+		async function createinputs(numberOfForms)
+		{
+			await fetchFileContent("names");
+				const tbl = document.createElement('table');
+				const tr=tbl.insertRow();
+				const td1=tr.insertCell();
+				td1.textContent="Név";
+				const td2=tr.insertCell();
+				td2.textContent="Pontok";
+				const td3=tr.insertCell();
+				td3.textContent="Városok";
+				const td4=tr.insertCell();
+				td4.textContent="Címek";
+			  var formWrapper = document.getElementById('inputs');
+			  for (var i = 0; i < numberOfForms; i++) {
+				var form = createForm(i,tbl);
+				formWrapper.appendChild(tbl);
+			  }
+		}
+		createinputs(4);
+		
+		function submitForm() {
+		const datas=[];
+		for (var idx=0; idx<4; idx++){
+			var icity=parseInt(document.getElementById('cityInput'+idx).value);
+			var ipoint=parseInt(document.getElementById('pointInput'+idx).value);
+			if (isNaN(icity))
+			icity=0;
+			if (isNaN(ipoint))
+			ipoint=0;
+			const dat=new data(document.getElementById('name'+idx).value,
+			icity,
+			ipoint,
+			document.getElementById('way'+idx).checked,
+			document.getElementById('army'+idx).checked);
+			datas.push(dat);
+		}
+		const alldat=new alldata(datas,document.getElementById('regions').value);
+		return alldat;
+		}
+		
+		class alldata
+		{
+			constructor(data, region) {
+			this.data = data;
+			this.region = region;
+			}
+		}
 		
 		class data{
-		
+			constructor(name, city, point, way, army) {
+        this.name = name;
+        this.city = city;
+        this.point = point;
+		this.way = way;
+		this.army = army;
+			}
+
 		}
+		
 		
 		function communicate()
 		{
 			
-			const inputElement = document.getElementById('id1');
-			console.log(inputElement.value);
+			//const inputElement = document.getElementById('id1');
+			//console.log(inputElement.value);
 			if(socket.readyState === socket.OPEN) {
 				
-				socket.send(JSON.stringify(inputElement.value));
+				socket.send(JSON.stringify(submitForm()));
 			}
 
 		};
 		
-		var x=setInterval(communicate, 10000);
+		var x=setInterval(communicate, 3000);
 
     </script>
 </body>

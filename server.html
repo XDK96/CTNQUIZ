@@ -4,28 +4,408 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CATAN Quiz Server</title>
+	<style>
+    
+	.parent {
+        width: 80%;
+        height: 200px;
+        background-color: lightgray;
+        margin: 20px auto;
+        position: relative;
+    }
+
+    .child {
+        width: 50%; 
+        height: 100px;
+        background-color: green;
+        color: white;
+        text-align: center;
+        line-height: 100px;
+        position: relative;
+    }
+	.dice {
+            font-size: 5em;
+            margin: 20px;
+        }
+</style>
+	
 </head>
 <body>
-    <h1>Hello, WebSocket!</h1>
-    <p id="message">Waiting for message...</p>
+	<div>
+	<table width="100%">
+	<tr>
+	<td id="quizbox" width="60%" style="background-color: red;">
+	<div>
+	<table>
+	<tr>
+	<td width="30%">
+	<p id="date">Idő</p>
+	</td>
+	<td width="20%">
+	<input id="round" type="number" value="0">
+	</td>
+	<td width="25%">
+	<p id="timer" align="center">Időzítő</p>
+	</td>
+	<td width="25%" align="center">
+	<!--<button id="qsstep"></button> -->
+	<button id="step" onclick="stepRound()">Lépés</button> 
+	</td>
+	</tr>
+	</table>
+	</div>
+	<div style="background-color: lightblue;">
+	<table width="100%">
+	<tr>
+	<td colspan="2" align="center" id="question" width="100%"  style="background-color: red;">
+	Kérdés
+	</td>
+	</tr>
+	<tr>
+	<td  id="ans1" width="50%" align="center">
+	Válasz A
+	</td>
+	<td id="ans2" width="50%" align="center">
+	Válasz B
+	</td>
+	</tr>
+	<tr>
+	<td id="ans3" width="50%" align="center">
+	Válasz C
+	</td>
+	<td id="ans4" width="50%" align="center">
+	Válasz D
+	</td>
+	</tr>
+	<tr>
+	<td  align="center">
+	<div class="dice" id="dice1">🎲</div>
+	</td>
+	<td  align="center">
+	<div class="dice" id="dice2">🎲</div>
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2">
+	<div align="center" id="seven"></div>
+	<td>
+	</tr>
+	</table>
+	</div>
+	</td>
+	<td id="pointbox" width="40%" style="background-color: green;">
+	<table id="results" width="100%">
+	
+	</table>
+	<div align="center" id="sumhit">Hit: 0</div>
+	</div>
     <script>
+			let countdownTime = 45; // Kezdő idő másodpercben (pl. 10 perc)
+			let countdownInterval;
+			let currentCountdownTime = countdownTime; // A jelenlegi visszaszámláló idő
+
+			function startCountdown() {
+			if (!countdownInterval) {
+            countdownInterval = setInterval(() => {
+                const seconds = currentCountdownTime % 61;
+
+                // Formázás: két számjegyű perc és másodperc
+                document.getElementById('timer').textContent = `${seconds}`;
+
+                // Idő csökkentése
+                currentCountdownTime--;
+
+                // Ellenőrzés: ha az idő lejárt, állítsa le az időzítőt
+                if (currentCountdownTime < 0) {
+					showResult();
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                    document.getElementById('timer').textContent = '';
+                }
+            }, 1000);
+			}
+			}
+
+			function stopCountdown() {
+				clearInterval(countdownInterval);
+				countdownInterval = null;
+			}
+
+			function resetCountdown() {
+				stopCountdown();
+				currentCountdownTime = countdownTime;
+				const seconds = currentCountdownTime % 61;
+				document.getElementById('timer').textContent = `${seconds}`;
+			}
+		//startCountdown();
+	
+		var roundCount=0;
+		var blessing=0;
+		function stepRound()
+		{
+			roundCount=parseInt(document.getElementById('round').value,10)+1;
+			CalculateHit(roundCount-1);
+			document.getElementById('round').value=roundCount;
+			getQuiz(roundCount);
+			var dcs=rollDice(1)+1;
+			dcs+=rollDice(2)+1;
+			document.getElementById('seven').textContent="";
+			resetCountdown();
+			startCountdown();
+			setDate();
+			if (dcs==7)
+			{
+				blessing+=1;
+				if (blessing%2==1)
+				{
+					document.getElementById('seven').textContent="Isteni áldás: egy választott nyersanyag";
+				}
+				else
+				{
+					document.getElementById('seven').textContent="Iszlám betörés: egy nyresanyag elvesztése";
+				}
+			}
+		}
+		function setDate()
+		{
+			var datebase=1777;
+			var month=["szeptember","november","február","április","június"];
+			var realdate=(datebase+(Math.floor(roundCount/5))+(roundCount%5>2))+" "+month[((roundCount-1)%5)];
+			document.getElementById('date').textContent=realdate;
+		}
+		
+		function showResult()
+		{
+			if (ansNumber==5)
+			{
+				for (var i=1; i<=4; i++)
+				{
+				document.getElementById('ans'+i).style.backgroundColor='#ca0d0b';
+				}
+			}
+			else
+			{
+				document.getElementById('ans'+ansNumber).style.backgroundColor='#ca0d0b';
+			}
+		}
+		
+		var ansNumber=-1;
+		function getQuiz(round)
+		{
+			document.getElementById('question').textContent=quiz[(roundCount-1)*6];
+			for (var i=1; i<=4; i++)
+			{
+				document.getElementById('ans'+i).textContent=quiz[(roundCount-1)*6+i];
+				document.getElementById('ans'+i).style.backgroundColor='';
+			}
+			ansNumber=parseInt(quiz[(roundCount-1)*6+5]);
+		}
+		
+		function rollDice(id) {
+        const dice = document.getElementById('dice'+id);
+        const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+        const result = Math.floor(Math.random() * 6);
+        dice.textContent = diceFaces[result];
+		return result;
+		}
+		
+		const regions=["Galilea","Júdea","Szamaria"];
+		
+		function InitResultTable()
+		{
+			var table=document.getElementById('results');
+			var rv0=table.insertRow();
+			const td1 = rv0.insertCell();
+			td1.textContent="Név";
+			const td2 = rv0.insertCell();
+			td2.textContent="Pontok";
+			const td3 = rv0.insertCell();
+			td3.textContent="Városok";
+			const td4 = rv0.insertCell();
+			td4.textContent="Út";
+			const td5 = rv0.insertCell();
+			td5.textContent="Sereg";
+			
+			
+			for (var i=0; i<3; i++)
+			{
+				var rv2=table.insertRow();
+				const td=rv2.insertCell();
+				td.setAttribute("id", "region"+i);
+				td.setAttribute("align", "center");
+				td.setAttribute("colspan", "5");
+				td.textContent=regions[i];
+				for (var j=0; j<4; j++)
+				{
+					var rv=table.insertRow();
+					const td1 = rv.insertCell();
+					td1.setAttribute("id", "name"+i*4+j);
+					const td2 = rv.insertCell();
+					td2.setAttribute("id", "point"+i*4+j);
+					const td3 = rv.insertCell();
+					td3.setAttribute("id", "city"+i*4+j);
+					const td4 = rv.insertCell();
+					td4.setAttribute("id", "way"+i*4+j);	
+					const td5 = rv.insertCell();
+					td5.setAttribute("id", "army"+i*4+j);
+					const tickSpan0 = document.createElement('span');
+					tickSpan0.className = 'tick'; 
+					tickSpan0.innerHTML = '&#10003;';
+					tickSpan0.setAttribute('id', 'sparmy'+i*4+j);					
+					document.getElementById('army'+i*4+j).appendChild(tickSpan0);
+					const tickSpan1 = document.createElement('span');
+					tickSpan1.className = 'tick'; 
+					tickSpan1.setAttribute('id', 'spway'+i*4+j);					
+					tickSpan1.innerHTML = '&#10003;';	
+					document.getElementById('way'+i*4+j).appendChild(tickSpan1);
+					
+				}
+				var rv1=table.insertRow();
+				const td1 = rv1.insertCell();
+				td1.textContent="Összeg";
+				td1.setAttribute("id", "sname"+i);
+				const td2 = rv1.insertCell();
+				td2.setAttribute("id", "spoint"+i);
+				const td3 = rv1.insertCell();
+				td3.setAttribute("id", "scity"+i);
+				const td4 = rv1.insertCell();
+				td4.setAttribute("id", "sway"+i);
+				const td5 = rv1.insertCell();
+				td5.setAttribute("id", "sarmy"+i);
+				const tickSpan0 = document.createElement('span');
+				tickSpan0.className = 'tick'; 
+				tickSpan0.innerHTML = '&#10003;';
+				tickSpan0.setAttribute('id', 'ssparmy'+i);					
+				document.getElementById('sarmy'+i).appendChild(tickSpan0);
+				const tickSpan1 = document.createElement('span');
+				tickSpan1.className = 'tick'; 
+				tickSpan1.setAttribute('id', 'sspway'+i);					
+				tickSpan1.innerHTML = '&#10003;';	
+				document.getElementById('sway'+i).appendChild(tickSpan1);
+				
+			}
+			
+		}
+		InitResultTable();
+		
+		function SetResults(data)
+		{
+			const idx=data.region;
+			for (var i=0; i<4; i++)
+			{
+				document.getElementById('name'+idx*4+i).textContent=names[parseInt(data.data[i].name.substring(4))-1];
+				document.getElementById('point'+idx*4+i).textContent=data.data[i].point;
+				document.getElementById('city'+idx*4+i).textContent=data.data[i].city;
+				if (data.data[i].way)
+				{
+					document.getElementById('spway'+idx*4+i).innerHTML = '&#10003;';
+				}
+				else
+				{
+					document.getElementById('spway'+idx*4+i).innerHTML = '';
+				
+				}
+				if (data.data[i].army)
+				{
+					document.getElementById('sparmy'+idx*4+i).innerHTML = '&#10003;';
+				}
+				else
+				{
+					document.getElementById('sparmy'+idx*4+i).innerHTML = '';
+				}
+			}
+			var sum0=0;
+			for (var i=0; i<4; i++)
+			{
+				sum0+=parseInt(document.getElementById('point'+idx*4+i).textContent);
+			}
+			document.getElementById('spoint'+idx).textContent=sum0;
+			var sum1=0;
+			for (var i=0; i<4; i++)
+			{
+				sum1+=parseInt(document.getElementById('city'+idx*4+i).textContent);
+			}
+			document.getElementById('scity'+idx).textContent=sum1;
+			var sum2=false;
+			for (var i=0; i<4; i++)
+			{
+				
+				if (document.getElementById('sparmy'+idx*4+i).innerHTML != '')
+					sum2=true;
+			}
+			if (sum2)
+				document.getElementById('ssparmy'+idx).innerHTML  = '&#10003;';		
+			else
+				document.getElementById('ssparmy'+idx).innerHTML  = '';	
+			var sum3=false;
+			for (var i=0; i<4; i++)
+			{
+				if (document.getElementById('spway'+idx*4+i).innerHTML != '')
+					sum3=true;
+			}
+			if (sum3)
+				document.getElementById('sspway'+idx).innerHTML  = '&#10003;';		
+			else
+				document.getElementById('sspway'+idx).innerHTML  = '';						
+		}
+		var sumHit=[51];
+		for (var l=0; l<51; l++)
+			sumHit[l]=0;
+		function CalculateHit(round)
+		{
+			var hits=0;
+			for (var i=0; i<3; i++)
+			{
+				if (document.getElementById('scity'+i).textContent!="")
+					hits+=parseInt(document.getElementById('scity'+i).textContent);
+			}	
+			sumHit[round]=hits;
+			console.log(sumHit);
+			var actHit=0;
+			for (var i=0; i<=round; i++)
+				actHit+=sumHit[i];
+			document.getElementById('sumhit').textContent="Hit:"+actHit;
+		}
+		
         //const socket = new WebSocket('ws://${window.location.host}');
-		var host="wss://"+window.location.host;
+		var host="wss://"+window.location.host;		
+		if (host.search("localhost") !== -1)
+			host="ws://"+window.location.host;
+		var http="https://"+window.location.host;
+		if (http.search("localhost") !== -1)
+			http="http://"+window.location.host;	
 		const socket = new WebSocket(host); 
 		socket.onmessage = function(event) {
-            console.log('Received message: ', event.data);
-
-            // Parse the received JSON data
+            //console.log('Received message: ', event.data);
+			
             const data = JSON.parse(event.data);
-            console.log('Parsed data: ', data);
-
-            // Display the received data
-            const messageElement = document.getElementById('message');
-            messageElement.innerHTML = data;
+            //console.log('Parsed data: ', data);
+			SetResults(data);
         };
 
-		
-		//var x=setInterval(communicate, 10000);
+		async function fetchFileContent(type) {
+		try {
+			const response = await fetch(http+"/"+type);
+			if (!response.ok) {
+			  throw new Error('Network response was not ok ' + response.statusText);
+			}
+			var text = await response.text();
+			var res = text.split('\n'); // Split the text into lines
+		  } catch (error) {
+			console.error('There was a problem with the fetch operation:', error);
+		  }
+		  return res;
+		}
+		var names=[];
+		var quiz=[];
+		async function init()
+		{
+			names=await fetchFileContent("names");
+			quiz=await fetchFileContent("quiz");
+		}
+		init();
+
+
     </script>
 </body>
 </html>
