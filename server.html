@@ -145,6 +145,9 @@
 		{
 			roundCount=parseInt(document.getElementById('round').value,10)+1;
 			CalculateHit(roundCount-1);
+			if (roundCount==51)
+			{
+			}
 			document.getElementById('round').value=roundCount;
 			getQuiz(roundCount);
 			var dcs=rollDice(1)+1;
@@ -165,10 +168,14 @@
 					document.getElementById('seven').textContent="Iszlám betörés: egy nyresanyag elvesztése";
 				}
 			}
+			if (roundCount==51)
+			{
+				document.getElementById('seven').textContent="Jeruzsálem ostroma 1187 szeptember."
+			}
 		}
 		function setDate()
 		{
-			var datebase=1777;
+			var datebase=1177;
 			var month=["szeptember","november","február","április","június"];
 			var realdate=(datebase+(Math.floor(roundCount/5))+(roundCount%5>2))+" "+month[((roundCount-1)%5)];
 			document.getElementById('date').textContent=realdate;
