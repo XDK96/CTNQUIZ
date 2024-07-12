@@ -70,12 +70,12 @@ Mágus
 Harcos
 Szerető
 2
-SZZSOMBOR
-SZZSOMBOR
-SZZSOMBOR
-SZZSOMBOR
-SZZSOMBOR
-SZZSOMBOR
+Mi volt Zsombor korábbi félelme?
+Csak lányai lesznek
+Egy középiskolában kell aludnia
+Nem lehet Parázs
+Négy fia lesz
+4
 Melyik mű szereplője Capulet?
 Hamlet
 Vízkereszt, vagy amit akartok
@@ -112,12 +112,12 @@ A Föld felszínének hány %-át foglalja el az Atlanti-óceán?
 10
 17
 1
-DJULI
-DJULI
-DJULI
-DJULI
-DJULI
-DJULI
+Hány gyűrűt hord Juli?
+2
+3
+4
+5
+3
 Pécsi egyházmegye alapításának ideje?
 1001
 1003
